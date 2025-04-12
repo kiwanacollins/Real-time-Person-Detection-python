@@ -26,8 +26,9 @@ This project provides a lightweight yet powerful person detection system that ru
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/raspberry-pi-person-detection.git
-cd raspberry-pi-person-detection
+git clone https://github.com/kiwanacollins/Real-time-Person-Detection-python.git
+
+cd Real-time-Person-Detection-python
 ```
 
 2. Install dependencies:
