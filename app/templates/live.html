@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Live Feed - Person Detection System{% endblock %}
+{% block nav_live %}active{% endblock %}
+
+{% block head %}
+<style>
+    /* Specific styles for the live page can go here */
+    .camera-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .camera-feed {
+        width: 100%;
+        display: block;
+    }
+    
+    .camera-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    
+    .camera-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .detection-stats {
+        margin-top: 20px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .detection-stats .stat-card {
+        flex: 1;
+        min-width: 200px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Live Camera Feed</h2>
+    <div class="page-actions">
+        <button class="btn" id="fullscreen-btn">
+            <svg viewBox="0 0 24 24">
+                <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
+            </svg>
+            <span>Fullscreen</span>
+        </button>
+    </div>
+</div>
+
+<div class="live-container">
+    <div class="camera-container" id="camera-container">
+        <img src="/api/stream" class="camera-feed" id="camera-feed" alt="Live camera feed">
+        <canvas class="camera-overlay" id="camera-overlay"></canvas>
+    </div>
+    
+    <div class="camera-controls">
+        <div>
+            <button class="btn btn-primary" id="pause-btn">
+                <svg viewBox="0 0 24 24" class="pause-icon">
+                    <path d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+                </svg>
+                <svg viewBox="0 0 24 24" class="play-icon" style="display: none;">
+                    <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                </svg>
+                <span id="pause-text">Pause</span>
+            </button>
+            <button class="btn" id="snapshot-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20,4H16.83L15,2H9L7.17,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6A2,2 0 0,0 20,4M20,18H4V6H8.05L9.88,4H14.12L15.95,6H20V18M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15Z" />
+                </svg>
+                <span>Snapshot</span>
+            </button>
+        </div>
+        <div>
+            <span class="fps-indicator" id="fps-indicator">5 FPS</span>
+        </div>
+    </div>
+    
+    <div class="detection-stats">
+        <div class="stat-card">
+            <h3>Current Detection</h3>
+            <div class="stat-content">
+                <span class="person-count" id="current-count">0</span>
+                <span>persons detected</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Confidence</h3>
+            <div class="stat-content">
+                <div class="confidence-bar-container">
+                    <div class="confidence-bar" id="confidence-bar" style="width: 0%;"></div>
+                    <span class="confidence-text" id="confidence-text">0%</span>
+                </div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Detection Time</h3>
+            <div class="stat-content">
+                <span id="detection-time">0 ms</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/live.js') }}"></script>
+{% endblock %}

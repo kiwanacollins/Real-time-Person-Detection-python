@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Error Log - Person Detection System{% endblock %}
+{% block nav_errors %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Error Log</h2>
+    <div class="page-actions">
+        <button class="btn" id="refresh-errors-btn">
+            <svg viewBox="0 0 24 24">
+                <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
+            </svg>
+            <span>Refresh</span>
+        </button>
+        <button class="btn btn-danger" id="clear-resolved-btn">
+            <svg viewBox="0 0 24 24">
+                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+            </svg>
+            <span>Clear Resolved</span>
+        </button>
+    </div>
+</div>
+
+<div class="errors-container">
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">Show:</span>
+            <div class="btn-group">
+                <button class="btn btn-sm active" id="show-active-btn">Active</button>
+                <button class="btn btn-sm" id="show-resolved-btn">Resolved</button>
+                <button class="btn btn-sm" id="show-all-btn">All</button>
+            </div>
+        </div>
+        <div class="search-input">
+            <svg viewBox="0 0 24 24">
+                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.43,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.43C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+            </svg>
+            <input type="text" id="error-search" class="form-control" placeholder="Search error messages...">
+        </div>
+    </div>
+    
+    <div class="error-list" id="error-list">
+        <!-- Error items will be inserted here via JavaScript -->
+        <div class="loading">
+            <div class="spinner"></div>
+            <span>Loading errors...</span>
+        </div>
+    </div>
+    
+    <div class="no-errors" id="no-errors" style="display: none;">
+        <svg viewBox="0 0 24 24">
+            <path d="M12,2L1,21H23M12,6L19.53,19H4.47M11,10V14H13V10M11,16V18H13V16" />
+        </svg>
+        <p>No errors found</p>
+    </div>
+    
+    <template id="error-item-template">
+        <div class="error-item" data-timestamp="" data-resolved="0">
+            <div class="error-header">
+                <div class="error-timestamp"></div>
+                <div class="error-status">
+                    <span class="status-badge active">Active</span>
+                    <span class="status-badge resolved">Resolved</span>
+                </div>
+            </div>
+            <div class="error-message"></div>
+            <div class="error-actions">
+                <button class="btn btn-sm resolve-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+                    </svg>
+                    <span>Mark Resolved</span>
+                </button>
+                <button class="btn btn-sm details-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" />
+                    </svg>
+                    <span>Details</span>
+                </button>
+            </div>
+        </div>
+    </template>
+</div>
+
+<div class="error-detail-modal" id="error-detail-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Error Detail</h3>
+            <button class="modal-close" id="error-detail-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="error-detail-content">
+                <div class="detail-row">
+                    <span class="detail-label">Timestamp:</span>
+                    <span class="detail-value" id="detail-timestamp"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" id="detail-status"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Message:</span>
+                    <div class="detail-value code-block" id="detail-message"></div>
+                </div>
+                <div class="detail-row" id="detail-stacktrace-container">
+                    <span class="detail-label">Stack Trace:</span>
+                    <div class="detail-value code-block" id="detail-stacktrace"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" id="error-detail-footer">
+            <button class="btn btn-primary" id="detail-resolve-btn">Mark as Resolved</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/errors.js') }}"></script>
+{% endblock %}

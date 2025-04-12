@@ -1,0 +1,66 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE settings
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Local development settings
+.env
+.env.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Raspberry Pi specific
+*.img
+
+# Model files (if they're large, consider using Git LFS instead)
+*.h5
+*.tflite
+*.pt
+*.pth
+
+# Media files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.avi
+# Include test/sample images if needed
+!samples/*.jpg
+!samples/*.png
+
+# Temporary files
+.tmp/
+temp/
+
+# Jupyter notebooks
+.ipynb_checkpoints/

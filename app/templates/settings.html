@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Person Detection System{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Settings</h2>
+    <div class="page-actions">
+        <button class="btn btn-outline" id="reset-btn">Reset Defaults</button>
+        <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+    </div>
+</div>
+
+<div class="settings-container">
+    <div class="settings-section">
+        <h3>Camera Settings</h3>
+        <div class="form-group">
+            <label for="camera-select">Camera Source:</label>
+            <select class="form-control" id="camera-select">
+                <option value="0">Default Webcam</option>
+                <option value="1">External Camera</option>
+                <option value="2">IP Camera</option>
+            </select>
+        </div>
+        <div class="form-group" id="ip-camera-container" style="display: none;">
+            <label for="ip-camera-url">IP Camera URL:</label>
+            <input type="text" class="form-control" id="ip-camera-url" placeholder="rtsp://username:password@192.168.1.100:554/stream">
+        </div>
+        <div class="form-group">
+            <label for="resolution-select">Resolution:</label>
+            <select class="form-control" id="resolution-select">
+                <option value="640x480">640x480 (Default)</option>
+                <option value="800x600">800x600</option>
+                <option value="1280x720">1280x720</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn" id="test-camera-btn">Test Camera</button>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h3>Detection Settings</h3>
+        <div class="form-group">
+            <label for="confidence-threshold">Confidence Threshold:</label>
+            <div class="range-slider-container">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" id="confidence-threshold">
+                <span class="range-value" id="confidence-threshold-value">0.5</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inference-fps">Inference FPS:</label>
+            <div class="range-slider-container">
+                <input type="range" min="1" max="10" step="1" value="5" id="inference-fps">
+                <span class="range-value" id="inference-fps-value">5 FPS</span>
+            </div>
+            <div class="setting-description">Higher values increase CPU usage</div>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="use-coral" class="form-checkbox">
+            <label for="use-coral">Use Coral USB Accelerator (if available)</label>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h3>System Settings</h3>
+        <div class="form-group">
+            <label for="max-db-size">Max Database Size:</label>
+            <div class="range-slider-container">
+                <input type="range" min="50" max="500" step="10" value="200" id="max-db-size">
+                <span class="range-value" id="max-db-size-value">200 MB</span>
+            </div>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="auto-cleanup" class="form-checkbox" checked>
+            <label for="auto-cleanup">Auto-cleanup old records</label>
+        </div>
+        <div class="form-group">
+            <label for="log-level">Log Level:</label>
+            <select class="form-control" id="log-level">
+                <option value="error">Error Only</option>
+                <option value="warning">Warning</option>
+                <option value="info" selected>Information</option>
+                <option value="debug">Debug</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h3>Advanced Settings</h3>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="enable-sse" class="form-checkbox" checked>
+            <label for="enable-sse">Enable Server-Sent Events</label>
+            <div class="setting-description">Real-time updates for dashboard</div>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="power-saving" class="form-checkbox">
+            <label for="power-saving">Power Saving Mode</label>
+            <div class="setting-description">Reduces performance for better battery life</div>
+        </div>
+        <div class="form-group">
+            <label for="startup-action">On Startup:</label>
+            <select class="form-control" id="startup-action">
+                <option value="dashboard">Show Dashboard</option>
+                <option value="live">Show Live Feed</option>
+                <option value="none">Show Home Page</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="camera-test-modal" id="camera-test-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Camera Test</h3>
+            <button class="modal-close" id="camera-test-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="camera-test-container">
+                <img src="" id="camera-test-image" alt="Camera test">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" id="camera-test-refresh">Refresh</button>
+            <button class="btn btn-primary" id="camera-test-confirm">Use This Camera</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='/js/settings.js') }}"></script>
+{% endblock %}
